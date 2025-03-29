@@ -11,7 +11,7 @@ data_file = "budget_data.csv"
 users_file = "users.csv"
 
 def load_users():
-    if os.path.exists(users_file):
+    if os.path.exists(users_file) and os.stat(users_file).st_size > 0:
         return pd.read_csv(users_file)
     else:
         return pd.DataFrame(columns=["Username", "Password"])
@@ -41,8 +41,7 @@ def login_page():
     password = st.text_input("Password", type="password")
     
     if st.button("Login"):
-        user_match = users[(users["Username"] == username) & (users["Password"] == password)]
-        if not user_match.empty:
+        if ((users["Username"] == username) & (users["Password"] == password)).any():
             st.session_state["authenticated"] = True
             st.session_state["username"] = username
             st.success("Login successful! Redirecting...")
@@ -61,10 +60,9 @@ def signup_page():
             st.error("Username already exists. Choose another.")
         else:
             new_user = pd.DataFrame([[new_username, new_password]], columns=["Username", "Password"])
-            updated_users = pd.concat([users, new_user], ignore_index=True)
-            save_users(updated_users)
+            users = pd.concat([users, new_user], ignore_index=True)
+            save_users(users)
             st.success("Account created successfully! Please login.")
-            st.session_state["authenticated"] = False  # Ensure they log in again after signing up
             st.rerun()
 
 def budget_dashboard():
