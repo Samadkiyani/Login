@@ -35,13 +35,13 @@ if "authenticated" not in st.session_state:
     st.session_state["username"] = ""
 
 def login_page():
-    users = load_users()  # Reload users to get the latest data
+    users = load_users()
     st.title("🔑 Login to Your Account")
     username = st.text_input("Username")
     password = st.text_input("Password", type="password")
     
     if st.button("Login"):
-        if ((users["Username"] == username) & (users["Password"] == password)).any():
+        if not users.empty and ((users["Username"] == username) & (users["Password"] == password)).any():
             st.session_state["authenticated"] = True
             st.session_state["username"] = username
             st.success("Login successful! Redirecting...")
@@ -55,15 +55,17 @@ def signup_page():
     new_password = st.text_input("Choose a Password", type="password")
     
     if st.button("Sign Up"):
-        users = load_users()  # Reload users to get the latest data
+        users = load_users()
         if new_username in users["Username"].values:
             st.error("Username already exists. Choose another.")
-        else:
+        elif new_username and new_password:
             new_user = pd.DataFrame([[new_username, new_password]], columns=["Username", "Password"])
             users = pd.concat([users, new_user], ignore_index=True)
             save_users(users)
             st.success("Account created successfully! Please login.")
             st.rerun()
+        else:
+            st.error("Please fill in both fields.")
 
 def budget_dashboard():
     st.title(f"💰 Welcome, {st.session_state['username']} to Samad Kiani Budget Dashboard")
