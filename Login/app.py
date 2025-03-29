@@ -7,20 +7,23 @@ import uuid
 import base64
 
 def set_background(image_file):
-    with open(image_file, "rb") as img_file:
-        encoded_string = base64.b64encode(img_file.read()).decode()
-    
-    bg_css = f"""
-    <style>
-    .stApp {{
-        background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ6BeMAYNFZ9K3VAPGI78XsBMhAWFtJRK8AtA&s,{encoded_string}");
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-    }}
-    </style>
-    """
-    st.markdown(bg_css, unsafe_allow_html=True)
+    if os.path.exists(image_file):
+        with open(image_file, "rb") as img_file:
+            encoded_string = base64.b64encode(img_file.read()).decode()
+        
+        bg_css = f"""
+        <style>
+        .stApp {{
+            background-image: url("data:image/png;base64,{encoded_string}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }}
+        </style>
+        """
+        st.markdown(bg_css, unsafe_allow_html=True)
+    else:
+        st.warning("Background image not found. Please check the file path.")
 
 # Set background
 set_background("image.png")
@@ -125,7 +128,6 @@ def budget_dashboard():
     st.write(f"**Total Expense:** ${total_expense:.2f}")
     st.write(f"**Balance:** ${balance:.2f}")
     
-    # Graphs
     st.subheader("📊 Financial Overview")
     if not data.empty:
         income_expense_data = data.groupby("Type")["Amount"].sum()
@@ -138,7 +140,6 @@ def budget_dashboard():
             ax.set_ylabel('')
             st.pyplot(fig)
     
-    # Delete Data Option
     st.subheader("🗑️ Delete a Transaction")
     delete_id = st.text_input("Enter the Customer ID to Delete")
     if st.button("Delete Transaction"):
