@@ -29,7 +29,6 @@ def save_data(df):
     df.to_csv(data_file, index=False)
 
 data = load_data()
-
 if "authenticated" not in st.session_state:
     st.session_state["authenticated"] = False
     st.session_state["username"] = ""
@@ -67,6 +66,7 @@ def signup_page():
             st.success("Account created successfully! You can now log in.")
 
 def budget_dashboard():
+    global data
     st.title(f"💰 Welcome, {st.session_state['username']} to Samad Kiani Budget Dashboard")
     
     if st.button("Logout"):
@@ -94,7 +94,7 @@ def budget_dashboard():
         st.sidebar.success(f"Transaction added successfully! Customer ID: {customer_id}")
     
     st.subheader("Transaction History")
-    st.dataframe(data)
+    st.dataframe(data if not data.empty else pd.DataFrame(columns=["ID", "Date", "Customer", "Category", "Amount", "Type"]))
     
     total_income = data[data["Type"] == "Income"]["Amount"].sum()
     total_expense = data[data["Type"] == "Expense"]["Amount"].sum()
