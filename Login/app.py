@@ -117,6 +117,15 @@ def budget_dashboard():
             category_expense_data.plot.pie(ax=ax, autopct='%1.1f%%', startangle=90)
             ax.set_ylabel('')
             st.pyplot(fig)
+    
+    # Delete Data Option
+    st.subheader("🗑️ Delete a Transaction")
+    delete_id = st.text_input("Enter the Customer ID to Delete")
+    if st.button("Delete Transaction"):
+        data = data[data["ID"] != delete_id]
+        save_data(data)
+        st.success("Transaction deleted successfully!")
+        st.rerun()
 
 if not st.session_state["authenticated"]:
     option = st.sidebar.radio("Select an Option", ["Login", "Sign Up"])
