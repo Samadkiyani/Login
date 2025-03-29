@@ -1,14 +1,14 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-import seaborn as sns  # type: ignore
+import seaborn as sns # type: ignore
 import streamlit as st
 import os
 import uuid
 
-# File paths for authentication and budget data
-users_file = "users.csv"
-data_file = "budget_data.csv"
+st.image("https://media.istockphoto.com/id/1488294044/photo/businessman-works-on-laptop-showing-business-analytics-dashboard-with-charts-metrics-and-kpi.jpg?s=612x612&w=0&k=20&c=AcxzQAe1LY4lGp0C6EQ6reI7ZkFC2ftS09yw_3BVkpk=", use_column_width=True)
 
+data_file = "budget_data.csv"
+users_file = "users.csv"
 
 def load_users():
     if os.path.exists(users_file):
@@ -16,14 +16,21 @@ def load_users():
     else:
         return pd.DataFrame(columns=["Username", "Password"])
 
-
 def save_users(df):
     df.to_csv(users_file, index=False)
 
+def load_data():
+    if os.path.exists(data_file) and os.stat(data_file).st_size > 0:
+        return pd.read_csv(data_file)
+    else:
+        return pd.DataFrame(columns=["ID", "Date", "Customer", "Category", "Amount", "Type"])
 
+def save_data(df):
+    df.to_csv(data_file, index=False)
+
+data = load_data()
 users = load_users()
 
-# Streamlit session state for authentication
 if "authenticated" not in st.session_state:
     st.session_state["authenticated"] = False
     st.session_state["username"] = ""
@@ -39,7 +46,6 @@ def login_page():
             st.session_state["username"] = username
             st.success("Login successful! Redirecting...")
             st.rerun()
-
         else:
             st.error("Invalid username or password")
 
@@ -56,29 +62,15 @@ def signup_page():
             updated_users = pd.concat([users, new_user], ignore_index=True)
             save_users(updated_users)
             st.success("Account created successfully! Please login.")
-           st.rerun()
-
+            st.rerun()
 
 def budget_dashboard():
-    st.title("💰 Welcome to Samad Kiani Budget Dashboard")
+    st.title(f"💰 Welcome, {st.session_state['username']} to Samad Kiani Budget Dashboard")
     
     if st.button("Logout"):
         st.session_state["authenticated"] = False
         st.session_state["username"] = ""
         st.rerun()
-
-    
-    # Load budget data
-    def load_data():
-        if os.path.exists(data_file) and os.stat(data_file).st_size > 0:
-            return pd.read_csv(data_file)
-        else:
-            return pd.DataFrame(columns=["ID", "Date", "Customer", "Category", "Amount", "Type"])
-    
-    def save_data(df):
-        df.to_csv(data_file, index=False)
-    
-    data = load_data()
     
     st.sidebar.header("Add a New Transaction")
     date = st.sidebar.date_input("Date")
@@ -94,11 +86,10 @@ def budget_dashboard():
         else:
             customer_id = str(uuid.uuid4())[:8]
         
-        new_data = pd.DataFrame([[customer_id, date, customer, category, amount, transaction_type]],
-                                columns=["ID", "Date", "Customer", "Category", "Amount", "Type"])
+        new_data = pd.DataFrame([[customer_id, date, customer, category, amount, transaction_type]], columns=["ID", "Date", "Customer", "Category", "Amount", "Type"])
         data = pd.concat([data, new_data], ignore_index=True)
         save_data(data)
-        st.sidebar.success("Transaction added successfully!")
+        st.sidebar.success(f"Transaction added successfully! Customer ID: {customer_id}")
     
     st.subheader("Transaction History")
     st.dataframe(data)
@@ -111,18 +102,7 @@ def budget_dashboard():
     st.write(f"**Total Income:** ${total_income:.2f}")
     st.write(f"**Total Expense:** ${total_expense:.2f}")
     st.write(f"**Balance:** ${balance:.2f}")
-    
-    st.subheader("Expense Breakdown by Category")
-    expense_data = data[data["Type"] == "Expense"].groupby("Category")["Amount"].sum().reset_index()
-    if not expense_data.empty:
-        fig, ax = plt.subplots(figsize=(8, 6))
-        sns.barplot(data=expense_data, x="Category", y="Amount", palette="pastel", ax=ax)
-        ax.set_ylabel("Amount ($)")
-        ax.set_title("Expense Breakdown by Category")
-        plt.xticks(rotation=45)
-        st.pyplot(fig)
 
-# Main App Logic
 if not st.session_state["authenticated"]:
     option = st.sidebar.radio("Select an Option", ["Login", "Sign Up"])
     if option == "Login":
