@@ -4,6 +4,26 @@ import seaborn as sns # type: ignore
 import streamlit as st
 import os
 import uuid
+import base64
+
+def set_background(image_file):
+    with open(image_file, "rb") as img_file:
+        encoded_string = base64.b64encode(img_file.read()).decode()
+    
+    bg_css = f"""
+    <style>
+    .stApp {{
+        background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ6BeMAYNFZ9K3VAPGI78XsBMhAWFtJRK8AtA&s,{encoded_string}");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    }}
+    </style>
+    """
+    st.markdown(bg_css, unsafe_allow_html=True)
+
+# Set background
+set_background("image.png")
 
 st.image("https://media.istockphoto.com/id/1488294044/photo/businessman-works-on-laptop-showing-business-analytics-dashboard-with-charts-metrics-and-kpi.jpg?s=612x612&w=0&k=20&c=AcxzQAe1LY4lGp0C6EQ6reI7ZkFC2ftS09yw_3BVkpk=", use_column_width=True)
 
