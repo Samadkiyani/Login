@@ -56,16 +56,15 @@ def signup_page():
     
     if st.button("Sign Up"):
         users = load_users()
-        if new_username in users["Username"].values:
+        if new_username.strip() == "" or new_password.strip() == "":
+            st.error("Please fill in both fields.")
+        elif new_username in users["Username"].values:
             st.error("Username already exists. Choose another.")
-        elif new_username and new_password:
+        else:
             new_user = pd.DataFrame([[new_username, new_password]], columns=["Username", "Password"])
             users = pd.concat([users, new_user], ignore_index=True)
             save_users(users)
-            st.success("Account created successfully! Please login.")
-            st.rerun()
-        else:
-            st.error("Please fill in both fields.")
+            st.success("Account created successfully! You can now log in.")
 
 def budget_dashboard():
     st.title(f"💰 Welcome, {st.session_state['username']} to Samad Kiani Budget Dashboard")
