@@ -5,7 +5,7 @@ import streamlit as st
 import os
 import uuid
 
-st.image("https://media.istockphoto.com/id/1488294044/photo/businessman-works-on-laptop-showing-business-analytics-dashboard-with-charts-metrics-and-kpi.jpg?s=612x612&w=0&k=20&c=AcxzQAe1LY4lGp0C6EQ6reI7ZkFC2ftS09yw_3BVkpk=", use_container_width=True)
+st.image("https://media.istockphoto.com/id/1488294044/photo/businessman-works-on-laptop-showing-business-analytics-dashboard-with-charts-metrics-and-kpi.jpg?s=612x612&w=0&k=20&c=AcxzQAe1LY4lGp0C6EQ6reI7ZkFC2ftS09yw_3BVkpk=", use_column_width=True)
 
 data_file = "budget_data.csv"
 users_file = "users.csv"
@@ -104,6 +104,19 @@ def budget_dashboard():
     st.write(f"**Total Income:** ${total_income:.2f}")
     st.write(f"**Total Expense:** ${total_expense:.2f}")
     st.write(f"**Balance:** ${balance:.2f}")
+    
+    # Graphs
+    st.subheader("📊 Financial Overview")
+    if not data.empty:
+        income_expense_data = data.groupby("Type")["Amount"].sum()
+        st.bar_chart(income_expense_data)
+        
+        category_expense_data = data[data["Type"] == "Expense"].groupby("Category")["Amount"].sum()
+        if not category_expense_data.empty:
+            fig, ax = plt.subplots()
+            category_expense_data.plot.pie(ax=ax, autopct='%1.1f%%', startangle=90)
+            ax.set_ylabel('')
+            st.pyplot(fig)
 
 if not st.session_state["authenticated"]:
     option = st.sidebar.radio("Select an Option", ["Login", "Sign Up"])
