@@ -5,30 +5,25 @@ import streamlit as st
 import os
 import uuid
 import base64
+from datetime import datetime
 
-def set_background(image_file):
-    if os.path.exists(image_file):
-        with open(image_file, "rb") as img_file:
-            encoded_string = base64.b64encode(img_file.read()).decode()
-        
-        bg_css = f"""
-        <style>
-        .stApp {{
-            background-image: url("data:image/png;base64,{encoded_string}");
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-        }}
-        </style>
-        """
-        st.markdown(bg_css, unsafe_allow_html=True)
-    else:
-        st.warning("Background image not found. Please check the file path.")
+def set_background(image_url):
+    bg_css = f"""
+    <style>
+    .stApp {{
+        background-image: url("{image_url}");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    }}
+    </style>
+    """
+    st.markdown(bg_css, unsafe_allow_html=True)
 
 # Set background
 set_background("https://thumbs.dreamstime.com/b/virtual-screen-business-intelligence-dashboard-analytics-big-data-technology-concept-129550149.jpg")
 
-st.image("https://media.istockphoto.com/id/1488294044/photo/businessman-works-on-laptop-showing-business-analytics-dashboard-with-charts-metrics-and-kpi.jpg?s=612x612&w=0&k=20&c=AcxzQAe1LY4lGp0C6EQ6reI7ZkFC2ftS09yw_3BVkpk=",  use_container_width =True)
+st.image("https://media.istockphoto.com/id/1488294044/photo/businessman-works-on-laptop-showing-business-analytics-dashboard-with-charts-metrics-and-kpi.jpg?s=612x612&w=0&k=20&c=AcxzQAe1LY4lGp0C6EQ6reI7ZkFC2ftS09yw_3BVkpk=", use_column_width=True)
 
 data_file = "budget_data.csv"
 users_file = "users.csv"
@@ -90,7 +85,15 @@ def signup_page():
 
 def budget_dashboard():
     global data
-    st.title(f"💰 Welcome, {st.session_state['username']} to Samad Kiani Budget Dashboard")
+    current_hour = datetime.now().hour
+    if current_hour < 12:
+        greeting = "Good Morning"
+    elif current_hour < 18:
+        greeting = "Good Afternoon"
+    else:
+        greeting = "Good Evening"
+    
+    st.title(f"💰 {greeting}, {st.session_state['username']}! Welcome to Samad Kiani Budget Dashboard")
     
     if st.button("Logout"):
         st.session_state["authenticated"] = False
