@@ -1,6 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-import seaborn as sns 
+import seaborn as sns # type: ignore
 import streamlit as st
 import os
 import uuid
@@ -21,9 +21,9 @@ def set_background(image_url):
     st.markdown(bg_css, unsafe_allow_html=True)
 
 # Set background
-set_background("https://thumbs.dreamstime.com/b/virtual-screen-business-intelligence-dashboard-analytics-big-data-technology-concept-129550149.jpg")
+set_background("https://img.freepik.com/premium-photo/business-data-financial-figures-visualiser-graphic_31965-24532.jpg?semt=ais_hybrid")
 
-st.image("https://media.istockphoto.com/id/1488294044/photo/businessman-works-on-laptop-showing-business-analytics-dashboard-with-charts-metrics-and-kpi.jpg?s=612x612&w=0&k=20&c=AcxzQAe1LY4lGp0C6EQ6reI7ZkFC2ftS09yw_3BVkpk=", use_container_width =True)
+st.image("https://media.istockphoto.com/id/1488294044/photo/businessman-works-on-laptop-showing-business-analytics-dashboard-with-charts-metrics-and-kpi.jpg?s=612x612&w=0&k=20&c=AcxzQAe1LY4lGp0C6EQ6reI7ZkFC2ftS09yw_3BVkpk=", use_column_width=True)
 
 data_file = "budget_data.csv"
 users_file = "users.csv"
