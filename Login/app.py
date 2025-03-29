@@ -41,7 +41,8 @@ def login_page():
     password = st.text_input("Password", type="password")
     
     if st.button("Login"):
-        if ((users["Username"] == username) & (users["Password"] == password)).any():
+        user_match = users[(users["Username"] == username) & (users["Password"] == password)]
+        if not user_match.empty:
             st.session_state["authenticated"] = True
             st.session_state["username"] = username
             st.success("Login successful! Redirecting...")
@@ -63,6 +64,7 @@ def signup_page():
             updated_users = pd.concat([users, new_user], ignore_index=True)
             save_users(updated_users)
             st.success("Account created successfully! Please login.")
+            st.session_state["authenticated"] = False  # Ensure they log in again after signing up
             st.rerun()
 
 def budget_dashboard():
