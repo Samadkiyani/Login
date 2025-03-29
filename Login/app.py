@@ -23,7 +23,7 @@ def set_background(image_url):
 # Set background
 set_background("https://img.freepik.com/premium-photo/business-data-financial-figures-visualiser-graphic_31965-24532.jpg?semt=ais_hybrid")
 
-st.image("https://media.istockphoto.com/id/1488294044/photo/businessman-works-on-laptop-showing-business-analytics-dashboard-with-charts-metrics-and-kpi.jpg?s=612x612&w=0&k=20&c=AcxzQAe1LY4lGp0C6EQ6reI7ZkFC2ftS09yw_3BVkpk=", use_column_width=True)
+st.image("https://media.istockphoto.com/id/1488294044/photo/businessman-works-on-laptop-showing-business-analytics-dashboard-with-charts-metrics-and-kpi.jpg?s=612x612&w=0&k=20&c=AcxzQAe1LY4lGp0C6EQ6reI7ZkFC2ftS09yw_3BVkpk=", use_container_width =True)
 
 data_file = "budget_data.csv"
 users_file = "users.csv"
