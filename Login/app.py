@@ -29,19 +29,19 @@ def save_data(df):
     df.to_csv(data_file, index=False)
 
 data = load_data()
-users = load_users()
 
 if "authenticated" not in st.session_state:
     st.session_state["authenticated"] = False
     st.session_state["username"] = ""
 
 def login_page():
+    users = load_users()  # Reload users to get the latest data
     st.title("🔑 Login to Your Account")
     username = st.text_input("Username")
     password = st.text_input("Password", type="password")
     
     if st.button("Login"):
-        if (users["Username"] == username).any() and (users["Password"] == password).any():
+        if ((users["Username"] == username) & (users["Password"] == password)).any():
             st.session_state["authenticated"] = True
             st.session_state["username"] = username
             st.success("Login successful! Redirecting...")
