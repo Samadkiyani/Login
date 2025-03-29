@@ -5,7 +5,7 @@ import streamlit as st
 import os
 import uuid
 
-st.image("https://media.istockphoto.com/id/1488294044/photo/businessman-works-on-laptop-showing-business-analytics-dashboard-with-charts-metrics-and-kpi.jpg?s=612x612&w=0&k=20&c=AcxzQAe1LY4lGp0C6EQ6reI7ZkFC2ftS09yw_3BVkpk=", use_container_width=True)
+st.image("https://media.istockphoto.com/id/1488294044/photo/businessman-works-on-laptop-showing-business-analytics-dashboard-with-charts-metrics-and-kpi.jpg?s=612x612&w=0&k=20&c=AcxzQAe1LY4lGp0C6EQ6reI7ZkFC2ftS09yw_3BVkpk=", use_column_width=True)
 
 data_file = "budget_data.csv"
 users_file = "users.csv"
@@ -55,6 +55,7 @@ def signup_page():
     new_password = st.text_input("Choose a Password", type="password")
     
     if st.button("Sign Up"):
+        users = load_users()  # Reload users to get the latest data
         if new_username in users["Username"].values:
             st.error("Username already exists. Choose another.")
         else:
