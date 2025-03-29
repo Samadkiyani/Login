@@ -63,7 +63,8 @@ def budget_dashboard():
     if st.button("Logout"):
         st.session_state["authenticated"] = False
         st.session_state["username"] = ""
-        st.experimental_rerun()
+        st.rerun()
+
     
     # Load budget data
     def load_data():
