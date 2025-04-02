@@ -102,6 +102,10 @@ def signup_page():
             users = pd.concat([users, new_user], ignore_index=True)
             save_users(users)
             st.success("Account created successfully! You can now log in.")
+def logout():
+    st.session_state["authenticated"] = False
+    st.session_state["username"] = ""
+    st.rerun()
 
 def budget_dashboard():
     global data
