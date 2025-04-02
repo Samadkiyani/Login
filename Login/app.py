@@ -67,7 +67,7 @@ def forgot_password():
 def login_page():
     users = load_users()
     st.title("🔑 Login to Your Account")
-    
+
     username = st.text_input("Username").strip()
     password = st.text_input("Password", type="password").strip()
 
@@ -78,13 +78,14 @@ def login_page():
         if not users.empty and ((users["Username"] == username) & (users["Password"] == password)).any():
             st.session_state["authenticated"] = True
             st.session_state["username"] = username
-            st.success("Login successful! Redirecting...")
+            st.success("✅ Login successful! Redirecting...")
             st.rerun()
         else:
-            st.error("Invalid username or password")
+            st.error("❌ Invalid username or password")
 
     if st.button("Forgot Password?"):
         forgot_password()
+
 def signup_page():
     st.title("📝 Sign Up for an Account")
     new_username = st.text_input("Choose a Username")
