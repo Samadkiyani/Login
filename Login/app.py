@@ -54,17 +54,18 @@ if "authenticated" not in st.session_state:
 def login_page():
     users = load_users()
     st.title("🔑 Login to Your Account")
-    username = st.text_input("Username")
-    password = st.text_input("Password", type="password")
-    
+    username = st.text_input("Username").strip()  # Strip spaces
+    password = st.text_input("Password", type="password").strip()
+
     if st.button("Login"):
-        if not users.empty and ((users["Username"] == username) & (users["Password"] == password)).any():
+        if not users.empty and any((users["Username"].str.strip() == username) & (users["Password"].str.strip() == password)):
             st.session_state["authenticated"] = True
             st.session_state["username"] = username
             st.success("Login successful! Redirecting...")
             st.rerun()
         else:
             st.error("Invalid username or password")
+
 
 def signup_page():
     st.title("📝 Sign Up for an Account")
