@@ -51,10 +51,24 @@ if "authenticated" not in st.session_state:
     st.session_state["authenticated"] = False
     st.session_state["username"] = ""
 
+def forgot_password():
+    st.title("🔐 Forgot Password?")
+    users = load_users()
+    
+    username = st.text_input("Enter your Username")
+    
+    if st.button("Retrieve Password"):
+        if username in users["Username"].values:
+            user_password = users.loc[users["Username"] == username, "Password"].values[0]
+            st.success(f"Your password is: **{user_password}**")
+        else:
+            st.error("Username not found. Please check and try again.")    
+
 def login_page():
     users = load_users()
     st.title("🔑 Login to Your Account")
-    username = st.text_input("Username").strip()  
+    
+    username = st.text_input("Username").strip()
     password = st.text_input("Password", type="password").strip()
 
     if st.button("Login"):
@@ -69,8 +83,8 @@ def login_page():
         else:
             st.error("Invalid username or password")
 
-
-
+    if st.button("Forgot Password?"):
+        forgot_password()
 def signup_page():
     st.title("📝 Sign Up for an Account")
     new_username = st.text_input("Choose a Username")
